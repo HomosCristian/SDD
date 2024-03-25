@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include<stdio.h>
 #include<malloc.h>
-#include<stdio.h>`
-
 
 typedef struct Masina Masina;
 typedef struct Nod Nod;
@@ -23,7 +22,6 @@ struct LDI {
 	Nod* ultim;
 };
 
-
 void afisareMasina(Masina masina) {
 	printf("\n Masina %s are seria %d.", masina.producator, masina.serie);
 }
@@ -37,23 +35,18 @@ Masina initMasina(const char* producator, int serie) {
 	return masinaNoua;
 }
 
-//Discutie liste duble inlantuite (LDI)
-
-
-
 void inserareLaInceput(Masina masina, LDI* ldi) {
 	Nod* nou = (Nod*)malloc(sizeof(Nod));
 	nou->inf = masina;
 	nou->prev = NULL;
 	nou->next = ldi->prim;
-	if (ldi->prim != NULL) {  //conditie ca sa avem noduri in lista
-
+	if (ldi->prim) {  //conditie ca sa avem noduri in lista
 		ldi->prim->prev = nou;
 		ldi->prim = nou;
 	}
 	else {
 		ldi->ultim = nou;
-		ldi->prim = NULL;
+		ldi->prim = nou;
 	}
 }
 
@@ -62,14 +55,21 @@ void inserareLaFinal(Masina masina, LDI* ldi) {
 	nou->inf = masina;
 	nou->prev = ldi->ultim;
 	nou->next = NULL;
-	if (ldi->ultim != NULL) {  //conditie ca sa avem noduri in lista
-
+	if (ldi->ultim) {
 		ldi->ultim->next = nou;
 		ldi->ultim = nou;
 	}
 	else {
 		ldi->ultim = nou;
-		ldi->prim = NULL;
+		ldi->prim = nou;
+	}
+}
+
+void traversareLista(LDI lista, int* nrMasini) {   //traversare de la stanga la dreapta
+	while (lista.prim) {
+		afisareMasina(lista.prim->inf);
+		(*nrMasini)++;
+		lista.prim = lista.prim->next;
 	}
 }
 
@@ -86,19 +86,9 @@ void dezalocare(LDI* lista) {
 	lista->prim = lista->ultim = NULL;
 }
 
-void traversareLista(LDI lista, int* nrMasini) {   //traversare de la stanga la dreapta
-	while (lista.prim!=NULL)
-	{
-		afisareMasina(lista.prim->inf);
-		(*nrMasini)++;
-		lista.prim = lista.prim->next;
-	}
-}
-
 //Conversie de la LDI la vector
 
 //Am adaugat un contor la fct traversareLista
-
 void conversieLaVector(LDI lista, Masina** vectorMasini) {
 	int nrMasini = 0;
 	while (lista.prim) {
@@ -107,10 +97,19 @@ void conversieLaVector(LDI lista, Masina** vectorMasini) {
 		lista.prim = lista.prim->next;
 	}
 }
+
 //Lista circulara
 
-void traversareListaCirculara(LDI lista) {
+//void traversareListaCirculara(LDI lista) {
+//	Nod* aux = lista.prim;
+//	while (aux->next != lista.prim) {
+//		afisareMasina(aux->inf);
+//		aux = aux->next;
+//	}
+//	afisareMasina(aux->inf);
+//}
 
+void traversareListaCirculara(LDI lista) {
 	Nod* aux = lista.prim;
 	do {
 		afisareMasina(aux->inf);
@@ -124,26 +123,25 @@ void main() {
 	lista.ultim = NULL;
 
 	inserareLaInceput(initMasina("Ford", 1234), &lista);
-	inserareLaInceput(initMasina("Audi", 3453), &lista);
-	inserareLaInceput(initMasina("Renault", 4345), &lista);
-	inserareLaInceput(initMasina("Mercedes", 5344), &lista);
+	inserareLaInceput(initMasina("Renault", 5678), &lista);
+	inserareLaInceput(initMasina("Mercedes", 9101), &lista);
+	inserareLaFinal(initMasina("Bmw", 1112), &lista);
 
 	int nrMasini = 0;
 	traversareLista(lista, &nrMasini);
-	
 	Masina* vectorMasini = (Masina*)malloc(sizeof(Masina) * nrMasini);
 	conversieLaVector(lista, &vectorMasini);
-	printf("\n Afisare masini din vecotri:");
+
+	printf("\n Afisare masini din vector:");
 	for (int i = 0; i < nrMasini; i++) {
 		afisareMasina(vectorMasini[i]);
 		free(vectorMasini[i].producator);
 	}
 	free(vectorMasini);
 
+	//dezalocare(&lista);
+
 	lista.ultim->next = lista.prim;
 	lista.prim->prev = lista.ultim;
-
 	traversareListaCirculara(lista);
-
-	//dezalocare(&lista);  ////Nu are sens pt lista circulara
 }
