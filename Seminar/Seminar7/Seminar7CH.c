@@ -12,8 +12,8 @@ struct Masina {
 };
 
 struct Nod {
-	Masina inf;
-	Nod* next;
+	Masina inf; //informatie utila
+	Nod* next; //pointer de legatura, adresa urmatorului nod
 };
 
 struct HashTable {
@@ -35,11 +35,11 @@ Masina initMasina(const char* producator, int serie) {
 }
 
 void inserareLaFinal(Nod** cap, Masina masina) {
-	Nod* nou = (Nod*)malloc(sizeof(Nod));
+	Nod* nou = (Nod*)malloc(sizeof(Nod)); //Aici are sens sa facem shallow copy
 	nou->inf = masina;
 	nou->next = NULL;
 	if ((*cap) != NULL) {
-		Nod* aux = *cap;
+		Nod* aux = *cap; //Nu il putem folosi tot pe cap pentru deplasare -> trebuie auxiliar
 		while (aux->next) {
 			aux = aux->next;
 		}
@@ -50,7 +50,7 @@ void inserareLaFinal(Nod** cap, Masina masina) {
 	}
 }
 
-HashTable initHashTable(int dim) {
+HashTable initHashTable(int dim) {  //initializare hashTable cu NULL
 	HashTable hashTable;
 	hashTable.dimensiune = dim;
 	hashTable.vector = (Nod**)malloc(sizeof(Nod*) * dim);
@@ -60,11 +60,11 @@ HashTable initHashTable(int dim) {
 	return hashTable;
 }
 
-int hash(int serie, int dim) {
+int hash(int serie, int dim) {   //functia hash ne da pozitia unde inseram/cautam
 	return serie % dim;
 }
 
-void inserareInHT(HashTable ht, Masina masina) {
+void inserareInHT(HashTable ht, Masina masina) {  // inserare in tabela de dispersie (chaining)
 	if (ht.dimensiune > 0) {
 		int pozitie = hash(masina.serie, ht.dimensiune);
 		if (pozitie >= 0 && pozitie < ht.dimensiune) {
@@ -85,11 +85,11 @@ void traversareHT(HashTable hashT) {
 }
 
 void main() {
-	HashTable hashT = initHashTable(10);
-	inserareInHT(hashT, initMasina("Renault", 1234));
+	HashTable hashT = initHashTable(10);  //initializare hashTable
+	inserareInHT(hashT, initMasina("Renault", 1234));   //transmitem prin valoare hasht deoarece nun se modifica adresa. Ea se modifica la initHT
 	inserareInHT(hashT, initMasina("Ford", 5678));
 	inserareInHT(hashT, initMasina("Ford", 5679));
-	inserareInHT(hashT, initMasina("Ford", 5677));
+	inserareInHT(hashT, initMasina("Ford", 5677));  // coliziune pt ca seria%10 da 7 deci avem 3 masini pe pozitia 7 intr o lista
 	inserareInHT(hashT, initMasina("Ford", 5677));
 	inserareInHT(hashT, initMasina("Peugeot", 9101));
 	inserareInHT(hashT, initMasina("Ford", 5677));
