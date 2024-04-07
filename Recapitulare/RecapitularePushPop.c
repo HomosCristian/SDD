@@ -101,7 +101,7 @@ Motocicleta cautareDupaCapacitate(Nod** stiva, int capacitate) {
 
 void main()
 {
-	Nod* stiva = NULL;
+	Nod* stiva = NULL;  //LIFO
 	Motocicleta motocicleta;
 	push(&stiva, initMotocicleta("Kawasaki", 649, "Ninja 650", 67));
 	push(&stiva, initMotocicleta("Kawasaki", 399, "Ninja 400", 45));
@@ -122,7 +122,7 @@ void main()
 		free(motocicleta.model);
 	}
 
-	Nod* coada = NULL;
+	Nod* coada = NULL;  //FIFO
 	put(&coada, initMotocicleta("Kawasaki", 649, "Ninja 650", 67));
 	put(&coada, initMotocicleta("Kawasaki", 399, "Ninja 400", 45));
 	put(&coada, initMotocicleta("Kawasaki", 636, "Ninja ZX6R", 125));
