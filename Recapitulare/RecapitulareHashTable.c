@@ -54,12 +54,12 @@ void push(Nod** cap, Motocicleta motocicleta)  // Acelasi lucru ca inserarea la 
 
 void put(Nod** cap, Motocicleta motocicleta)  // Acelasi lucru ca inserarea la final
 {
-	Nod* nou = (Nod*)malloc(sizeof(Nod));
+	Nod* nou = (Nod*)malloc(sizeof(Nod)); // Aici are sens sa facem shallow copy
 	nou->inf = motocicleta;
 	nou->next = NULL;
 	if (*cap)
 	{
-		Nod* aux = *cap;
+		Nod* aux = *cap;  // Nu il putem folosi tot pe cap pentru deplasare -> trebuie auxiliar
 		while (aux->next)
 		{
 			aux = aux->next;
@@ -70,7 +70,7 @@ void put(Nod** cap, Motocicleta motocicleta)  // Acelasi lucru ca inserarea la f
 		*cap = nou;
 }
 
-HashTable initHashTable(int dim) 
+HashTable initHashTable(int dim) // Initializare hashTable cu NULL
 {
 	HashTable hashTable;
 	hashTable.dimensiune = dim;
@@ -81,7 +81,7 @@ HashTable initHashTable(int dim)
 	return hashTable;
 }
 
-int hash(int capacitate, int dim)
+int hash(int capacitate, int dim)  // Functia hash ne da pozitia unde inseram/cautam
 {
 	return capacitate / dim / dim %dim;
 }
